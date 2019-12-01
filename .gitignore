@@ -1,7 +1,7 @@
-client
-client2
-server
-others
-reverse-proxy
-reverse-proxy1
-reverse-proxy2
+client/
+client2/
+server/
+others/
+reverse-proxy/
+reverse-proxy1/
+reverse-proxy2/
