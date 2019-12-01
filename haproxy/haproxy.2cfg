@@ -1,0 +1,99 @@
+# Specifies TCP timeout on connect for use by the frontend ft_redis
+# Set the max time to wait for a connection attempt to a server to succeed 
+# The server and client side expected to acknowledge or send data.
+defaults REDIS
+mode tcp
+timeout connect 3s
+timeout server 6s
+timeout client 6s
+
+# # Specifies listening socket for accepting client connections using the default 
+# # REDIS TCP timeout and backend bk_redis TCP health check.
+frontend ft_redis
+    bind *:6379 name redis
+    default_backend bk_redis
+
+# # Specifies the backend Redis proxy server TCP health settings 
+# # Ensure it only forward incoming connections to reach a master.
+backend bk_redis
+    balance roundrobin
+    option tcp-check
+    tcp-check connect
+    tcp-check send PING\r\n
+    tcp-check expect string +PONG
+    tcp-check send QUIT\r\n
+    tcp-check expect string +OK
+
+    server redis-02 redis-slave:6379 maxconn 1024 check inter 2s weight 1 inter 2s downinter 5s rise 10 fall 2 backup
+    server redis-01 redis-master:6379 maxconn 1024 check inter 2s weight 1 inter 2s downinter 5s rise 10 fall 2
+    
+    # server redis-02 redis-slave:6379 check port 6379 check inter 2s weight 1 minconn 3 maxconn 6 inter 2s downinter 5s rise 10 fall 2 backup
+    # server redis-01 redis-master:6379 check port 6379 check inter 2s weight 1 minconn 3 maxconn 6 inter 2s downinter 5s rise 10 fall 2
+    
+
+
+# # # Specifies TCP timeout on connect for use by the frontend ft_redis
+# # # Set the max time to wait for a connection attempt to a server to succeed 
+# # # The server and client side expected to acknowledge or send data.
+# # defaults REDIS
+# # mode tcp
+# # timeout connect 3s
+# # timeout server 6s
+# # timeout client 6s
+
+# # # Specifies listening socket for accepting client connections using the default 
+# # # REDIS TCP timeout and backend bk_redis TCP health check.
+# # frontend ft_redis
+# # bind *:6378 name redis
+# # default_backend bk_redis
+
+# # # Specifies the backend Redis proxy server TCP health settings 
+# # # Ensure it only forward incoming connections to reach a master.
+# # backend bk_redis
+# # option tcp-check
+# # tcp-check connect
+# # tcp-check send PING\r\n
+# # tcp-check expect string +PONG
+# # tcp-check send info\ replication\r\n
+# # tcp-check expect string role:master
+# # tcp-check send QUIT\r\n
+# # tcp-check expect string +OK
+# # server redis-01 redis-master:6379 check port 6379 check inter 2s weight 1 inter 2s downinter 5s rise 10 fall 2
+# # server redis-02 redis-slave:6379 check port 6379 check inter 2s weight 1 inter 2s downinter 5s rise 10 fall 2 backup
+    
+# # # server redis_6379 localhost:6379 check inter 1s
+# # # server redis_6380 localhost:6380 check inter 1s 
+
+# # listen redis
+# #     server redis-01 redis-master:6379 check port 6379 check inter 2s weight 1 inter 2s downinter 5s rise 10 fall 2
+# #     server redis-02 redis-slave:6379 check port 6379 check inter 2s weight 1 inter 2s downinter 5s rise 10 fall 2 backup
+# #     bind *:6379
+# #     mode tcp
+# #     option tcpka
+# #     option tcplog
+# #     option tcp-check
+# #     tcp-check send PING\r\n
+# #     tcp-check expect string +PONG
+# #     tcp-check send info\ replication\r\n
+# #     tcp-check expect string role:master
+# #     tcp-check send QUIT\r\n
+# #     tcp-check expect string +OK
+# #     balance roundrobin
+
+
+# listen redis-postprocess-TCP-6379 0.0.0.0:6379
+#     mode tcp
+#     option tcplog
+#     option tcp-check
+#     #uncomment these lines if you have basic auth
+#     #tcp-check send AUTH\ yourpassword\r\n
+#     #tcp-check expect +OK
+#     tcp-check send PING\r\n
+#     tcp-check expect string +PONG
+#     tcp-check send info\ replication\r\n
+#     tcp-check expect string role:master
+#     tcp-check send QUIT\r\n
+#     tcp-check expect string +OK
+#     server redis-1 redis-master:6379 maxconn 1024 check inter 1s
+#     server redis-2 redis-slave:6379 maxconn 1024 check inter 1s
+#     # server redis-3 192.168.0.4:6379 maxconn 1024 check inter 1s

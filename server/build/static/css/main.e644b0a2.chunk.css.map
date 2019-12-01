@@ -1,0 +1,1 @@
+{"version":3,"sources":["/home/liran/Development/links-manager/client2/src/index.scss"],"names":[],"mappings":"AAAA,GACE,qBAAqB,AACrB,yBAAyB,AACzB,SAAS,AACT,SAAU,CACX","file":"main.e644b0a2.chunk.css","sourcesContent":["ul {\n  list-style-type: none;\n  background-color: #f5f2ef;  \n  margin: 0;\n  padding: 0;\n}"]}

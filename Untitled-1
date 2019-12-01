@@ -1,0 +1,78 @@
+ redis-sentinel redis-sentineln - number of nodes
+k - validator
+edges 
+
+go through edges
+  check if a is ancestor of b
+  check againt k
+
+function findAll ancestor of b
+  go over all edges and find a father
+  if found a father 
+    call again againt
+
+
+
+    function pairs(k, arr) {
+    let j = 0;
+    let i = 0;
+    let m = arr.length - 1;
+    let l = m;
+    let numPairs = new Set();
+    while (i < arr.length) {
+        if (Math.abs(arr[i] - arr[j]) === k) {
+            numPairs.add(`${arr[i]},${arr[j]}`);
+        } 
+        
+        if (Math.abs(arr[l] - arr[m]) === k) {
+            numPairs.add(`${arr[l]},${arr[m]}`);
+        } 
+        
+        // end and initalize;
+        if (j >= m) {
+            i++;
+            m--;
+            l=m;
+            j=i;
+        } else {
+            j++; 
+            l--;   
+        }
+    }
+    return numPairs.size;
+}
+'
+
+
+morgan
+
+loop over A and stop when a letter is bigger than first letter on B bigger
+    insert all letters which found into final 
+
+loop over B and stop when a letter is bigger than first letter on A bigger
+    insert all letters which found into final 
+
+
+
+function findPrimes(n) {
+    let primes = new Array(n).fill(true);
+    for (let p = 2; p*p < n; p++) {
+        if (primes[p]) {
+            for (let i = p*p; i < n; i+=p) {
+                primes[i] = false;
+            }
+        }
+    }
+    return primes.reduce((total, bool,i) => {
+        if (bool) {
+            total.push(i);
+        }
+        return total;
+    },[]);
+    console.log(primes);
+}
+
+let p = arr[0];
+
+
+

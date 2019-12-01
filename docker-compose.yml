@@ -1,0 +1,98 @@
+version: "3"
+
+services:
+    redis-master:
+        image: redis:5.0.3-alpine
+        volumes:
+            - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+            - "./redis/data:/data"
+        ports:
+            - 6379:6379
+    redis-slave:
+        image: redis:5.0.3-alpine
+        command: redis-server --slaveof redis-master 6379
+        volumes:
+            - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+            - "./redis/data:/data"
+
+ # Instance 1
+    redis-sentinel:
+        build: 
+            context: ./redis-sentinel
+        ports: 
+            - 26379
+        links:
+            - redis-master
+    
+    # Instance 2
+    redis-sentinel2:
+        build: 
+            context: ./redis-sentinel
+        ports: 
+            - 26379
+        links:
+            - redis-master
+    
+    # Instance 3
+    redis-sentinel3:
+        build: 
+            context: ./redis-sentinel
+        ports: 
+            - 26379
+        links:
+            - redis-master
+
+    redis-haproxy:
+        # image: haproxy:1.9.3-alpine
+        build: 
+            context: ./haproxy
+        depends_on:
+            - redis-sentinel
+            - redis-sentinel2
+            - redis-sentinel3
+            - redis-master
+            - redis-slave
+        ports: 
+            - 6379
+            - 7777
+
+    reverse-proxy-1:
+        depends_on:
+            - redis-haproxy
+            - redis-sentinel
+            - redis-sentinel2
+            - redis-sentinel3
+        build: 
+            context: ./reverse-proxy1
+        # image: reverse-proxy:latest
+        ports:
+            - 9998:9000
+        restart: on-failure
+        env_file:
+            - reverse-proxy.env
+
+    reverse-proxy-2:
+        depends_on:
+            - redis-haproxy
+            - redis-sentinel
+            - redis-sentinel2
+            - redis-sentinel3
+        build: 
+            context: ./reverse-proxy1
+        # image: reverse-proxy:latest
+        ports:
+            - 9999:9000
+        restart: on-failure
+        env_file:
+            - reverse-proxy.env
+
+    haproxy-load-balancer:
+        # image: haproxy:1.9.3-alpine
+        build: 
+            context: ./haproxy-load-balancer
+        depends_on:
+            - reverse-proxy-2
+            - reverse-proxy-1
+        ports: 
+            - 32700
+            - 7778

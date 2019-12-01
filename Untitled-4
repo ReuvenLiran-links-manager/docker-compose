@@ -1,0 +1,99 @@
+/usr/src/app # redis-cli -h links-manager_redis-master_1 -p 6379 info replication
+# Replication
+  role:master
+  connected_slaves:1
+  slave0:ip=172.18.0.3,port=6379,state=online,offset=329932,lag=1
+  master_replid:1230bb6612fb61a17e6c256ac46e44ea5dd4262f
+  master_replid2:0000000000000000000000000000000000000000
+  master_repl_offset:329946
+  second_repl_offset:-1
+  repl_backlog_active:1
+  repl_backlog_size:1048576
+  repl_backlog_first_byte_offset:1
+  repl_backlog_histlen:329946
+
+/usr/src/app # redis-cli -h links-manager_redis-slave_1 -p 6379 info replication
+# Replication
+  role:slave
+  master_host:172.18.0.2
+  master_port:6379
+  master_link_status:up
+  master_last_io_seconds_ago:1
+  master_sync_in_progress:0
+  slave_repl_offset:332858
+  slave_priority:100
+  slave_read_only:1
+  connected_slaves:0
+  master_replid:1230bb6612fb61a17e6c256ac46e44ea5dd4262f
+  master_replid2:0000000000000000000000000000000000000000
+  master_repl_offset:332858
+  second_repl_offset:-1
+  repl_backlog_active:1
+  repl_backlog_size:1048576
+  repl_backlog_first_byte_offset:1
+  repl_backlog_histlen:332858
+
+/usr/src/app # redis-cli -h links-manager_redis-haproxy_1 -p 6379 info replication
+# Replication
+  role:master
+  connected_slaves:1
+  slave0:ip=172.18.0.3,port=6379,state=online,offset=362324,lag=0
+  master_replid:1230bb6612fb61a17e6c256ac46e44ea5dd4262f
+  master_replid2:0000000000000000000000000000000000000000
+  master_repl_offset:362324
+  second_repl_offset:-1
+  repl_backlog_active:1
+  repl_backlog_size:1048576
+  repl_backlog_first_byte_offset:1
+  repl_backlog_histlen:362324
+
+// KILL MASTER
+
+/usr/src/app # redis-cli -h links-manager_redis-haproxy_1 -p 6379 info replication
+# Replication
+  role:master
+  connected_slaves:0
+  master_replid:0b31dc99dae6aa5c12a1ebeacd25115ded9ec6dd
+  master_replid2:1230bb6612fb61a17e6c256ac46e44ea5dd4262f
+  master_repl_offset:400259
+  second_repl_offset:397063
+  repl_backlog_active:1
+  repl_backlog_size:1048576
+  repl_backlog_first_byte_offset:1
+  repl_backlog_histlen:400259
+
+
+/usr/src/app # redis-cli -h links-manager_redis-master_1 -p 6379 info replication
+# Replication
+  role:slave
+  master_host:172.18.0.3
+  master_port:6379
+  master_link_status:up
+  master_last_io_seconds_ago:1
+  master_sync_in_progress:0
+  slave_repl_offset:405241
+  slave_priority:100
+  slave_read_only:1
+  connected_slaves:0
+  master_replid:0b31dc99dae6aa5c12a1ebeacd25115ded9ec6dd
+  master_replid2:0000000000000000000000000000000000000000
+  master_repl_offset:405241
+  second_repl_offset:-1
+  repl_backlog_active:1
+  repl_backlog_size:1048576
+  repl_backlog_first_byte_offset:405228
+  repl_backlog_histlen:14
+
+/usr/src/app # redis-cli -h links-manager_redis-slave_1 -p 6379 info replication
+# Replication
+  role:master
+  connected_slaves:1
+  slave0:ip=172.18.0.2,port=6379,state=online,offset=409846,lag=1
+  master_replid:0b31dc99dae6aa5c12a1ebeacd25115ded9ec6dd
+  master_replid2:1230bb6612fb61a17e6c256ac46e44ea5dd4262f
+  master_repl_offset:409846
+  second_repl_offset:397063
+  repl_backlog_active:1
+  repl_backlog_size:1048576
+  repl_backlog_first_byte_offset:1
+  repl_backlog_histlen:409846
